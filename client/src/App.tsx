@@ -1,6 +1,13 @@
+import AuthForm from "./components/AuthForm";
+import BlogForm from "./components/BlogForm";
 
 function App() {
-  return <div>Hello</div>
+  return (
+    <>
+      <AuthForm />
+      <BlogForm />
+    </>
+  );
 }
 
-export default App
+export default App;

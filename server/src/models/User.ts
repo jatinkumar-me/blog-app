@@ -4,6 +4,7 @@ export interface IUser {
     fullName: string;
     email: string;
     password: string;
+    blogDraft?: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -23,6 +24,10 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
     },
+    blogDraft: {
+        type: String,
+        required: false,
+    }
 });
 
 const User = model<IUser>("User", userSchema);
