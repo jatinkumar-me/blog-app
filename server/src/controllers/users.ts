@@ -51,7 +51,7 @@ export const saveDraft = async (req: Request, res: Response) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     user.blogDraft = content;
     await user.save();
-    res.status(200).json(user);
+    res.status(200).json({ blogDraft: user.blogDraft });
   } catch (err) {
     res.status(500).json({ error: err });
   }

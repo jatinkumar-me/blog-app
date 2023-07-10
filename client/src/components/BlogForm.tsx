@@ -3,7 +3,7 @@ import { RichTextEditor, Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useDispatch, useSelector } from "react-redux";
-import { selectToken, selectUser } from "../features/authSlice";
+import { selectToken, selectUser, setBlogDraft } from "../features/authSlice";
 import { useEffect, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import { modals } from "@mantine/modals";
@@ -11,11 +11,12 @@ import { Blog, setBlogs } from "../features/blogSlice";
 
 export default function BlogForm() {
   const user = useSelector(selectUser);
+  const blogDraft = user?.blogDraft;
   const token = useSelector(selectToken);
   const dispatch = useDispatch();
-  const blogDraft = user?.blogDraft;
   const [changingFlag, setChangingFlag] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
   const debouncedValue = useDebounce<number>(changingFlag, 3000);
 
   useEffect(() => {
@@ -23,6 +24,10 @@ export default function BlogForm() {
     autoSaveDraft(controller.signal);
     return () => controller.abort();
   }, [debouncedValue]);
+
+  useEffect(() => {
+    editor?.commands.setContent(blogDraft ?? "");
+  }, [blogDraft]);
 
   async function autoSaveDraft(controller: AbortSignal) {
     try {
@@ -35,6 +40,7 @@ export default function BlogForm() {
         });
         return;
       }
+      const currentContent = editor?.getHTML();
       setIsLoading(true);
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/save-draft`,
@@ -44,11 +50,12 @@ export default function BlogForm() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ content: editor?.getHTML() }),
+          body: JSON.stringify({ content: currentContent }),
           signal: controller,
         }
       );
       const content = await response.json();
+      dispatch(setBlogDraft(content.blogDraft));
     } catch (err) {
       console.error(err);
     } finally {
@@ -66,6 +73,7 @@ export default function BlogForm() {
         });
         return;
       }
+      setIsPosting(true);
       const response = await fetch(`${import.meta.env.VITE_API_URL}/blogs`, {
         method: "POST",
         headers: {
@@ -79,19 +87,21 @@ export default function BlogForm() {
       if (Array.isArray(blogs)) dispatch(setBlogs(blogs));
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsPosting(false);
     }
   }
 
   const editor = useEditor({
     extensions: [StarterKit, Link],
-    content: blogDraft ?? "",
+    content: blogDraft,
     onUpdate() {
       setChangingFlag((previousValue) => previousValue + 1);
     },
   });
 
   return (
-    <Box>
+    <Box mb={"md"}>
       <RichTextEditor editor={editor}>
         <RichTextEditor.Toolbar sticky stickyOffset={0}>
           <RichTextEditor.ControlsGroup>
@@ -122,7 +132,6 @@ export default function BlogForm() {
         <RichTextEditor.Content />
       </RichTextEditor>
       <Group position="right" spacing="xs" mt="sm">
-        <Button color="red">Cancel</Button>
         <Button
           loading={isLoading}
           onClick={() => autoSaveDraft(new AbortController().signal)}
@@ -131,6 +140,7 @@ export default function BlogForm() {
         </Button>
         <Button
           onClick={() => postBlog()}
+          loading={isPosting}
           disabled={changingFlag < 2}
         >
           Post

@@ -27,11 +27,14 @@ export const authSlice = createSlice({
       state.user = user;
       state.token = token;
     },
+    setBlogDraft: (state, action: { payload: string; type: string }) => {
+      if (state.user) state.user.blogDraft = action.payload;
+    },
     logout: () => initialUserState,
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions;
+export const { logout, setCredentials, setBlogDraft } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectToken = (state: RootState) => state.auth.token;
 

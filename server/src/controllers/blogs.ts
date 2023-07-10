@@ -33,7 +33,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
     if (blog.userId.toString() !== userId)
       return res.status(401).json({ message: "Unauthorized" });
     await Blog.findByIdAndDelete(blogId);
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().populate("userId");
     res.status(203).json(blogs);
   } catch (err) {
     res.status(500).json({ error: err });
