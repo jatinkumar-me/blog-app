@@ -12,6 +12,8 @@ import {
   getBlogs,
   updateBlog,
 } from "./controllers/blogs";
+import { request } from "https";
+import { hostname } from "os";
 
 /* CONFIG */
 dotenv.config();
@@ -40,9 +42,31 @@ async function run() {
   try {
     await connect(process.env.MONGODB_URI ?? "");
     app.listen(port, () => console.log("✅ Server running on PORT", port));
+    preventColdStart();
   } catch (err) {
     console.error("❌ Couldn't start the server\n", err);
   }
+}
+
+function preventColdStart() {
+  setInterval(pingSelf, 100000);
+}
+
+function pingSelf() {
+  /*   This is a function to prevent cold start when deploying this app on free hosting services like Render */
+  const options = {
+    hostname: hostname(),
+    port,
+    path: "/blogs",
+    method: "GET",
+  };
+  const req = request(options, (res) => {
+    console.log(`Ping self response: ${res.statusCode}`);
+  });
+  req.on("error", (error) => {
+    console.error(`Ping self request error: ${error}`);
+  });
+  req.end();
 }
 
 run();
