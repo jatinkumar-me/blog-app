@@ -141,7 +141,7 @@ export default function BlogForm() {
         <Button
           onClick={() => postBlog()}
           loading={isPosting}
-          disabled={changingFlag < 2}
+          disabled={(editor?.getText().length ?? 0) < 2}
         >
           Post
         </Button>
