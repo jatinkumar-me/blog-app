@@ -4,13 +4,17 @@ import {
   Container,
   MantineProvider,
 } from "@mantine/core";
-import BlogForm from "./components/BlogForm";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import BlogList from "./components/BlogList";
+import { useSelector } from "react-redux";
+import { selectToken } from "./features/authSlice";
+
+const BlogForm = lazy(() => import('./components/BlogForm'));
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
+  const token = useSelector(selectToken);
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
@@ -26,7 +30,9 @@ function App() {
       >
         <Navbar />
         <Container>
-          <BlogForm />
+          {token && <Suspense fallback={<div>Loading...</div>}>
+            <BlogForm />
+          </Suspense> }
           <BlogList />
         </Container>
       </MantineProvider>
