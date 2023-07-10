@@ -12,7 +12,7 @@ import {
   getBlogs,
   updateBlog,
 } from "./controllers/blogs";
-import { request } from "https";
+import { request } from "http";
 import { hostname } from "os";
 
 /* CONFIG */
@@ -49,7 +49,7 @@ async function run() {
 }
 
 function preventColdStart() {
-  setInterval(pingSelf, 100000);
+  setInterval(pingSelf, 10000);
 }
 
 function pingSelf() {
