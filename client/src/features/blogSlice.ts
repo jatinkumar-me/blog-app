@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
+import { User } from "./authSlice";
 
 export type Blog = {
-  content: Object;
-  userId: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  _id: string;
+  userId: User;
 };
 
 type BlogState = {
@@ -15,11 +19,11 @@ const initialBlogState: BlogState = {
 };
 
 const blogSlice = createSlice({
-  name: "blogs",
+  name: "blog",
   initialState: initialBlogState,
   reducers: {
-    setBlogs: (state, action) => {
-      const { blogs } = action.payload;
+    setBlogs: (state, action: { payload: Blog[]; type: string }) => {
+      const blogs = action.payload;
       state.blogs = blogs;
     },
   },

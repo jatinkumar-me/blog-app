@@ -5,6 +5,7 @@ export type User = {
   fullName: string;
   email: string;
   password: string;
+  blogDraft?: string;
 };
 
 export type AuthState = {
@@ -21,7 +22,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: initialUserState,
   reducers: {
-    setCredentials: (state, action) => {
+    setCredentials: (state, action: { payload: AuthState; type: string }) => {
       const { user, token } = action.payload;
       state.user = user;
       state.token = token;

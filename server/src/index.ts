@@ -4,9 +4,14 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import { login, register } from "./controllers/users";
+import { login, register, saveDraft } from "./controllers/users";
 import { verifyToken } from "./middleware/auth";
-import { createBlog, deleteBlog, getBlogs, updateBlog } from "./controllers/blogs";
+import {
+  createBlog,
+  deleteBlog,
+  getBlogs,
+  updateBlog,
+} from "./controllers/blogs";
 
 /* CONFIG */
 dotenv.config();
@@ -22,6 +27,7 @@ app.use(express.json());
 /* ROUTES */
 app.post("/login", login);
 app.post("/register", register);
+app.post("/save-draft", verifyToken, saveDraft);
 app.post("/blogs", verifyToken, createBlog);
 app.get("/blogs", getBlogs);
 app.delete("/blogs/:blogId", verifyToken, deleteBlog);
@@ -31,12 +37,12 @@ const port = process.env.PORT ?? 3000;
 
 set({ strictQuery: false });
 async function run() {
-    try {
-        await connect(process.env.MONGODB_URI ?? "");
-        app.listen(port, () => console.log("✅ Server running on PORT", port));
-    } catch (err) {
-        console.error("❌ Couldn't start the server\n", err);
-    }
+  try {
+    await connect(process.env.MONGODB_URI ?? "");
+    app.listen(port, () => console.log("✅ Server running on PORT", port));
+  } catch (err) {
+    console.error("❌ Couldn't start the server\n", err);
+  }
 }
 
 run();
