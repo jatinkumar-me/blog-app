@@ -3,7 +3,6 @@ import {
   ColorSchemeProvider,
   Container,
   MantineProvider,
-  Text,
 } from "@mantine/core";
 import BlogForm from "./components/BlogForm";
 import Navbar from "./components/Navbar";

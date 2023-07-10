@@ -49,7 +49,7 @@ async function run() {
 }
 
 function preventColdStart() {
-  setInterval(pingSelf, 10000);
+  setInterval(pingSelf, 100000);
 }
 
 function pingSelf() {
