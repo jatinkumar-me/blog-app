@@ -1,7 +1,8 @@
 # Blog App
-A web application for creating and managing blog posts. It provides a user-friendly interface for creating, editing, and deleting blog posts, as well as a platform for users to read and interact with the published posts.
+A web application for creating blog posts. It provides a user-friendly interface for creating, editing, and deleting blog posts using a rich-text editor, as well as a platform for users to read and interact with the published posts.
 
 ## Features
+- Blog will autosave after 5 seconds of inactivity, it uses debouncing to minimize the number of API calls when saving.
 - User Registration and Authentication: Users can create an account, log in, and log out to access the blog app's features.
 - Create Blog Posts: Authenticated users can create new blog posts and edit their existing posts. The app provides a rich text editor to compose and format the blog content.
 - Delete Blog Posts: Users can delete their own blog posts if they no longer wish to keep them.
