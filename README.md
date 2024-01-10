@@ -1,7 +1,8 @@
 # Blog App
 A web application for creating blog posts. It provides a user-friendly interface for creating, editing, and deleting blog posts using a rich-text editor, as well as a platform for users to read and interact with the published posts.
 
-[screen-capture.webm](https://github.com/jatinkumar-me/blog-app/assets/85551434/743ae825-7cf4-4bee-ba10-9a5384d9b26d)
+<video src="https://github.com/jatinkumar-me/blog-app/assets/85551434/743ae825-7cf4-4bee-ba10-9a5384d9b26d" width="400" control />
+
 ## Features
 - Blog will autosave after 5 seconds of inactivity, it uses debouncing to minimize the number of API calls when saving.
 - Lazy loading of login form modal and text-editor to decrease initial load times.
